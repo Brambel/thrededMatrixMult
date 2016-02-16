@@ -26,3 +26,11 @@
 *.exe
 *.out
 *.app
+
+#additional files
+*.sln
+*.opendb
+ReadMe.txt
+targetver.h
+*.filters
+*.vcxproj
