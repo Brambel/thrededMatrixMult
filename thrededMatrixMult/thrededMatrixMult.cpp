@@ -1,29 +1,41 @@
 
 #include <pthread.h>
 
-int ** addMtx(int**, int**, int**, int);
-int** multMtx(int**, int**, int);
+void *multMtx(int**, int**, int**, int);
+void *addMtx(int**, int**, int);
 int** newAry(int);
+
+struct multArgs{
+  int** c;
+  int** a;
+  int** b;
+  int n;
+  
+};
 
 int main()
 {
     return 0;
 }
 
-int** addMtx(int** c, int** a, int** b, int n){
-	if(n == 1){
-	  c[1][1]=a[1][1] * b[1][1];
+void *multMtx(void* param){
+	  multArgs* par = (multArgs*) param;
+	if(par->n == 1){
+	  par->c[1][1]=par->a[1][1] * par->b[1][1];
 	}
 	else{
-	  int ** t = newAry(n);
-	  
+	  int ** t = newAry(par->n); //create empty array
+	   //multArgs parm1 = {par->c[1][1],par->a[1][1],par->b[1][1], par->n/2};
+	    
+	  pthread_t m1, m2, m3, m4, m5, m6, m7, m8;
+	  //pthread_create(m1, NULL, multMtx, (void*) param1);
 	 delete t; 
 	}
 	
 	return 0;
 }
 
-int** multMtx(int** a, int** b, int n) {
+void *addMtx(int** a, int** b, int n) {
 
 	return 0;
 }
