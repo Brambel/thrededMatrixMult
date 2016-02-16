@@ -1,17 +1,25 @@
 
 #include <pthread.h>
 
-void *multMtx(int**, int**, int**, int);
-void *addMtx(int**, int**, int);
-int** newAry(int);
-
 struct multArgs{
   int** c;
   int** a;
   int** b;
   int n;
-  
 };
+
+struct subArys{
+  int** ary11;
+  int** ary12;
+  int** ary21;
+  int** ary22;
+  int n;  
+};
+
+void *multMtx(int**, int**, int**, int);
+void *addMtx(int**, int**, int);
+int** newAry(int);
+subArys* split(int**, int);
 
 int main()
 {
@@ -45,4 +53,36 @@ int** newAry(int n){
   for(int i=0;i<n;++i){
    temp[i]=new int[n]; 
   }
+}
+
+subArys* split(int** ary, int n){
+ subArys* temp = new subArys;
+ 
+ temp->ary11 = newAry(n/2);
+ temp->ary12 = newAry(n/2);
+ temp->ary21 = newAry(n/2);
+ temp->ary22 = newAry(n/2);
+ temp->n = n/2;
+ 
+ for(int i=0;i<n;++i){
+   for(int j=0;j<n;++j){
+     if(i<n/2){
+	if(j<n/2){
+	  temp->ary11[i][j]=ary[i][j];
+	}
+	else{
+	  temp->ary12[i][j/2]=ary[i][j];
+	}
+     }
+     else{
+       if(j<n/2){
+	  temp->ary21[i/2][j]=ary[i][j];
+	}
+	else{
+	  temp->ary21[i/2][j/2]=ary[i][j];
+	}
+     }
+   }
+ }
+   return temp;
 }
