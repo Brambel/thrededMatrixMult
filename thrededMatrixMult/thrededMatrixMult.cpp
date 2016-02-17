@@ -80,7 +80,7 @@ void *multMtx(void* param){
 	  multArgs* param6 = new multArgs(t->ary12, a->ary12, b->ary22, t->n);
 	  multArgs* param7 = new multArgs(t->ary21, a->ary22, b->ary21, t->n);
 	  multArgs* param8 = new multArgs(t->ary22, a->ary22, b->ary22, t->n);
-	  pthread_t* m1, m2, m3, m4, m5, m6, m7, m8;
+	  pthread_t *m1, *m2, *m3, *m4, *m5, *m6, *m7, *m8;
 	  pthread_create(m1, NULL, multMtx, (void*) param1);
 	  //add and bundle for return here
 	}
@@ -105,9 +105,18 @@ void *addMtx(void* param) {
 	  addArgs* param2 = new addArgs(c->ary21, t->ary21, t->n);
 	  addArgs* param3 = new addArgs(c->ary21, t->ary21, t->n);
 	  addArgs* param4 = new addArgs(c->ary22, t->ary22, t->n);
+	  pthread_t *m1,*m2, *m3, *m4;
+	  pthread_t* threads[4]={m1, m2, m3, m4};
 	  
-	  pthread_t* m1, m2, m3, m4;
+	  pthread_create(m1, NULL, addMtx, (void*) param1);
+	  pthread_create(m2, NULL, addMtx, (void*) param2);
+	  pthread_create(m3, NULL, addMtx, (void*) param3);
+	  pthread_create(m4, NULL, addMtx, (void*) param4);
 	  
+	  //thread syntax is all over the place and looks like a toddler threw up in my code
+	  for(int i=0;i<4;++i){
+	   pthread_join(*threads[i],NULL); 
+	  }
 	}
 	return new void*;
 }
@@ -148,7 +157,6 @@ subArys* split(int** ary, int n){
 }
 
 void testSplit(int n){
-
   int** ptr=newAry(n);
   
   cout<<"parent matrix to be split\n";
