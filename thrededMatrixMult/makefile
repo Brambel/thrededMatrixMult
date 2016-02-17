@@ -1,8 +1,8 @@
 
-all: forkIt.exe
+all: mtxmult.exe
 
-forkIt.exe: forkIt.cpp
-	g++ -g forkIt.cpp -o forkIt.exe
+mtxmult.exe: thrededMatrixMult.cpp
+	g++ -g -pthread thrededMatrixMult.cpp -o mtxmult.exe
 
 clean:
-	rm  forkIt.exe
+	rm  mtxmult.exe
