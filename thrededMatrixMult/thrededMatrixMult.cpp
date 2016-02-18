@@ -48,12 +48,14 @@ void printAry(int**, int);
 
 void testSplit(int);
 void testAdd();
+void testMult();
 
 using namespace std;
 
 int main(){
-  testSplit(4);
-  testAdd();
+ // testSplit(4);
+ // testAdd();
+  testMult();
   
     return 0;
 }
@@ -63,7 +65,6 @@ void *multMtx(void* param){
 	  int ** tt = newAry(par->n); //create empty array
 	if(par->n == 1){
 	  par->c[0][0] = par->a[0][0] * par->b[0][0];
-	  //need to bundle for return here
 	}
 	else{
 	  
@@ -71,18 +72,37 @@ void *multMtx(void* param){
 	  subArys* b = split(par->b, par->n);
 	  subArys* c = split(par->c, par->n);
 	  subArys* t = split(tt, par->n);
+	  cout<<"par length: "<<par->n<<endl;
+	  cout<<"a length: "<<a->n<<endl;
 	  //package all params
 	  multArgs* param1 = new multArgs(c->ary11, a->ary11, b->ary11, t->n);
 	  multArgs* param2 = new multArgs(c->ary12, a->ary11, b->ary12, t->n);
 	  multArgs* param3 = new multArgs(c->ary21, a->ary21, b->ary11, t->n);
 	  multArgs* param4 = new multArgs(c->ary22, a->ary21, b->ary12, t->n);
-	  multArgs* param5 = new multArgs(t->ary11, a->ary12, b->ary22, t->n);
+	  multArgs* param5 = new multArgs(t->ary11, a->ary12, b->ary21, t->n);
 	  multArgs* param6 = new multArgs(t->ary12, a->ary12, b->ary22, t->n);
 	  multArgs* param7 = new multArgs(t->ary21, a->ary22, b->ary21, t->n);
 	  multArgs* param8 = new multArgs(t->ary22, a->ary22, b->ary22, t->n);
 	  pthread_t m1, m2, m3, m4, m5, m6, m7, m8;
+	  //threads run rampent
 	  pthread_create(&m1, NULL, multMtx, (void*) param1);
-	  //add and bundle for return here
+	  pthread_create(&m2, NULL, multMtx, (void*) param2);
+	  pthread_create(&m3, NULL, multMtx, (void*) param3);
+	  pthread_create(&m4, NULL, multMtx, (void*) param4);
+	  pthread_create(&m5, NULL, multMtx, (void*) param5);
+	  pthread_create(&m6, NULL, multMtx, (void*) param6);
+	  pthread_create(&m7, NULL, multMtx, (void*) param7);
+	  pthread_create(&m8, NULL, multMtx, (void*) param8);
+	  //bring them home
+	  pthread_join(m1,NULL);
+	  pthread_join(m2,NULL);
+	  pthread_join(m3,NULL);
+	  pthread_join(m4,NULL);
+	  pthread_join(m5,NULL);
+	  pthread_join(m6,NULL);
+	  pthread_join(m7,NULL);
+	  pthread_join(m8,NULL);
+	  
 	}
 	
 	delete tt;
@@ -225,18 +245,58 @@ void testAdd(){
 	subB[i][j]=(i*2)+j;
       }
     }
+  cout<<"array A before\n";
   printAry(subA, n);
+  cout<<"array B before\n";
   printAry(subB, n);
   
   addArgs* package = new addArgs(subA, subB, n);
   
   addMtx((void*)package);
   
+  cout<<"array A after\n";
   printAry(subA, 2);
+  cout<<"array B after\n";
   printAry(subB, 2);
   
   cout<<"*** End Add Test ***\n";
   
+}
+
+void testMult(){
+ int n=2;
+  int** subA = newAry(n);
+  int** subB = newAry(n);
+  int** subC = newAry(n);
+  
+  cout<<"*** Start Mult Test ***\n";
+  for(int i=0;i<n;++i){
+      for(int j=0;j<n;++j){
+	subA[i][j]=(i*2)+j;
+	subB[i][j]=(i*2)+j;
+      }
+    }
+  
+  cout<<"array A before\n";
+  printAry(subA, n);
+  cout<<"array B before\n";
+  printAry(subB, n);
+  cout<<"answer array C before\n";
+  printAry(subC, n);
+  
+  multArgs* package = new multArgs(subC, subA, subB, n);
+  
+  multMtx((void*)package);
+  
+  cout<<"array A after\n";
+  printAry(subA, 2);
+  cout<<"array B after\n";
+  printAry(subB, 2);
+  cout<<"answer array C after\n";
+  printAry(subC, n);
+  cout<<"should be\n2 3\n6 11\n";
+  
+  cout<<"*** End Mult Test ***\n"; 
 }
 
 void printAry(int ** ary, int n){
