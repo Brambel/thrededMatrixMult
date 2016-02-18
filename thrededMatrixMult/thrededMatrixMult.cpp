@@ -53,8 +53,8 @@ void testMult();
 using namespace std;
 
 int main(){
- // testSplit(4);
- // testAdd();
+  testSplit(4);
+  testAdd();
   testMult();
   
     return 0;
@@ -72,8 +72,6 @@ void *multMtx(void* param){
 	  subArys* b = split(par->b, par->n);
 	  subArys* c = split(par->c, par->n);
 	  subArys* t = split(tt, par->n);
-	  cout<<"par length: "<<par->n<<endl;
-	  cout<<"a length: "<<a->n<<endl;
 	  //package all params
 	  multArgs* param1 = new multArgs(c->ary11, a->ary11, b->ary11, t->n);
 	  multArgs* param2 = new multArgs(c->ary12, a->ary11, b->ary12, t->n);
@@ -103,6 +101,15 @@ void *multMtx(void* param){
 	  pthread_join(m7,NULL);
 	  pthread_join(m8,NULL);
 	  
+	  addArgs* add1 = new addArgs(c->ary11, t->ary11, c->n);
+	  addArgs* add2 = new addArgs(c->ary12, t->ary12, c->n);
+	  addArgs* add3 = new addArgs(c->ary21, t->ary21, c->n);
+	  addArgs* add4 = new addArgs(c->ary22, t->ary22, c->n);
+	  
+	  addMtx((void*) add1);
+	  addMtx((void*) add2);
+	  addMtx((void*) add3);
+	  addMtx((void*) add4);
 	}
 	
 	delete tt;
